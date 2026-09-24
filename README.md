@@ -1,16 +1,26 @@
-# EduPay — Next.js + React
+# EduPay Next React
 
-Run:
+This version is a clean React/Next.js implementation. The old `legacy-app.js` and giant HTML string are no longer loaded by the app.
+
+## Run
+
 ```bash
 npm install
 npm run dev
 ```
-Open http://localhost:3000.
 
-The app is now a Next.js App Router project. Existing EduPay payment/QR/history/localStorage behavior is preserved by the mounted runtime while the UI is hosted by React.
+## Main structure
 
-Changes:
-- Home service icons are smaller.
-- Initial landing screen has no bottom navigation.
-- Get Started enters the main app with bottom navigation.
-- Scrolling remains enabled while scrollbars are hidden.
+- `app/page.jsx` — application state and screen routing
+- `components/Home.jsx` — home dashboard
+- `components/History.jsx` — transaction history
+- `components/Scan.jsx` — camera/image QR scanning
+- `components/Transaction.jsx` — transaction details
+- `components/TransferFlow.jsx` — send/receive/confirm/PIN flow
+- `components/BottomNavigation.jsx` — fixed navigation
+- `components/Profile.jsx` — profile settings
+- `components/SimpleTabs.jsx` — search and alerts
+- `components/icons.jsx` — lightweight SVG icon set
+- `lib/storage.js` — localStorage persistence and demo seed data
+
+Transaction history stores up to 50 records locally and seeds 15 demo transactions on first run.
