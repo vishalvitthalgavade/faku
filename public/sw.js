@@ -1,5 +1,5 @@
-const CACHE = 'edupay-next-v1';
-const ASSETS = ['/', '/manifest.json', '/icons/icon-192.png', '/icons/icon-512.png', '/legacy-app.js', '/assets/qr-nav-reference.png'];
+const CACHE = 'edupay-next-v2';
+const ASSETS = ['/', '/manifest.json', '/icons/icon-192.png', '/icons/icon-512.png', '/assets/qr-nav-reference.png', '/PhonePe-Ting-Ding.mp3'];
 
 self.addEventListener('install', event => {
   event.waitUntil(caches.open(CACHE).then(cache => cache.addAll(ASSETS)).then(() => self.skipWaiting()));
