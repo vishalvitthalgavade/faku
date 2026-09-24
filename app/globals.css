@@ -398,3 +398,87 @@
   .pin-screen .reference-pin-pad { gap: 6px; }
   .pin-screen .reference-pin-pad button { height: clamp(42px, 7.7dvh, 50px); min-height: 42px; }
 }
+
+/* Home compact pass: smaller opening banner and slightly smaller service icons. */
+.hero-banner {
+  height: 410px;
+}
+.hero-copy {
+  top: 154px;
+}
+.hero-kicker {
+  font-size: 19px;
+  margin-bottom: 14px;
+}
+.hero-title {
+  font-size: 34px;
+}
+.hero-btn {
+  margin-top: 19px;
+  min-width: 220px;
+  padding: 9px 30px;
+  font-size: 18px;
+}
+.action-icon {
+  width: 64px;
+  height: 64px;
+  margin-bottom: 6px;
+}
+.action-icon img {
+  width: 58px;
+  height: 58px;
+}
+.service-icon {
+  width: 58px;
+  height: 54px;
+  margin-bottom: 5px;
+}
+.service-icon img {
+  width: 49px;
+  height: 49px;
+}
+.section-heading-row {
+  padding-top: 27px;
+  padding-bottom: 11px;
+}
+.section-heading-row h2,
+.section-title {
+  font-size: 21px;
+}
+@media (max-width: 390px) {
+  .hero-banner {
+    height: 380px;
+  }
+  .hero-copy {
+    top: 143px;
+  }
+  .hero-kicker {
+    font-size: 17px;
+    margin-bottom: 12px;
+  }
+  .hero-title {
+    font-size: 30px;
+  }
+  .hero-btn {
+    margin-top: 16px;
+    min-width: 200px;
+    padding: 8px 26px;
+    font-size: 17px;
+  }
+  .action-icon {
+    width: 59px;
+    height: 59px;
+  }
+  .action-icon img {
+    width: 54px;
+    height: 54px;
+  }
+  .service-icon {
+    width: 54px;
+    height: 50px;
+  }
+  .service-icon img {
+    width: 46px;
+    height: 46px;
+  }
+}
