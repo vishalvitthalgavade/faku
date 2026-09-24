@@ -261,3 +261,140 @@
   .pin-screen .reference-pin-pad { gap: 8px; }
   .pin-screen .reference-pin-pad button { height: 50px; }
 }
+
+/* Final mobile PIN fit + reference dot behavior. */
+.pin-screen {
+  height: 100dvh;
+  min-height: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+.pin-topbar {
+  height: 58px;
+  min-height: 58px;
+  flex: 0 0 58px;
+  padding: 8px 15px 6px;
+}
+.pin-payment-summary {
+  min-height: 68px;
+  padding: 9px 15px;
+  flex: 0 0 auto;
+}
+.pin-payee-block {
+  min-width: 0;
+  display: grid;
+  gap: 2px;
+}
+.pin-payment-summary .pin-payee-block strong {
+  max-width: min(64vw, 245px);
+  font-size: 13px;
+}
+.pin-payment-summary .pin-payee-block span {
+  max-width: min(64vw, 245px);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.pin-payment-summary .pin-payee-block em {
+  font-size: 8px;
+  color: #777;
+  font-style: normal;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: min(64vw, 245px);
+}
+.pin-summary-right {
+  display: grid;
+  justify-items: end;
+  gap: 4px;
+}
+.pin-upi-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 28px;
+  padding: 2px 5px;
+  border-radius: 4px;
+  background: #e8edf9;
+  color: #263c83;
+  font-size: 7px !important;
+  font-weight: 800;
+}
+.pin-content {
+  width: 100%;
+  max-width: 430px;
+  flex: 1 1 auto;
+  min-height: 0;
+  margin: 0 auto;
+  padding: 22px 16px calc(8px + env(safe-area-inset-bottom, 0px));
+  display: flex;
+  flex-direction: column;
+}
+.pin-heading {
+  margin-bottom: 12px;
+  flex: 0 0 auto;
+}
+.pin-screen .reference-dots {
+  margin: 0 auto 18px;
+  gap: 11px;
+  flex: 0 0 auto;
+}
+/* Empty dot = white center + black outline. Entered digit = solid black. */
+.pin-screen .reference-dots span,
+.pin-screen .reference-dots span:not(.filled) {
+  width: 13px;
+  height: 13px;
+  border: 2px solid #111;
+  background: #fff;
+  opacity: 1;
+  box-sizing: border-box;
+}
+.pin-screen .reference-dots span.filled {
+  background: #111;
+  border-color: #111;
+  opacity: 1;
+}
+.pin-security-note {
+  width: min(100%, 350px);
+  min-height: 39px;
+  margin-bottom: 10px;
+  padding: 7px 9px;
+  font-size: 8.5px;
+  flex: 0 0 auto;
+}
+.pin-helper {
+  margin-bottom: 4px;
+  flex: 0 0 auto;
+}
+.pin-error {
+  margin-bottom: 4px;
+  min-height: 12px;
+  flex: 0 0 auto;
+}
+.pin-screen .reference-pin-pad {
+  width: min(100%, 390px);
+  max-width: 390px;
+  margin: auto auto 0;
+  gap: 7px;
+  flex: 0 0 auto;
+}
+.pin-screen .reference-pin-pad button {
+  height: clamp(44px, 8.2dvh, 54px);
+  min-height: 44px;
+  border-radius: 26px;
+  font-size: 17px;
+}
+@media (max-width: 390px) {
+  .pin-topbar { height: 54px; min-height: 54px; flex-basis: 54px; }
+  .pin-payment-summary { min-height: 64px; padding-top: 7px; padding-bottom: 7px; }
+  .pin-content { padding: 16px 14px calc(7px + env(safe-area-inset-bottom, 0px)); }
+  .pin-heading { margin-bottom: 9px; }
+  .pin-screen .reference-dots { margin-bottom: 13px; gap: 10px; }
+  .pin-screen .reference-dots span,
+  .pin-screen .reference-dots span:not(.filled) { width: 12px; height: 12px; }
+  .pin-security-note { margin-bottom: 7px; min-height: 36px; }
+  .pin-screen .reference-pin-pad { gap: 6px; }
+  .pin-screen .reference-pin-pad button { height: clamp(42px, 7.7dvh, 50px); min-height: 42px; }
+}

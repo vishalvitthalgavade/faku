@@ -59,17 +59,23 @@ export function PinScreen({ txn, onBack, onComplete }) {
       else setError('Enter all 4 digits.');
       return;
     }
-    if (pin.length < 4) setPin((value) => value + key);
+    if (/^\d$/.test(key) && pin.length < 4) {
+      setPin((value) => value + key);
+    }
   };
 
-  const payeeName = txn?.name || 'EduPay Merchant';
+  const payeeName = txn?.payeeName || txn?.name || 'EduPay Merchant';
+  const upiId = txn?.upiId || 'merchant@edu';
   const amount = Number(txn?.amount || 0);
+  const note = txn?.note || '';
+  const merchantCode = txn?.merchantCode || '';
+  const source = txn?.source || '';
 
   return (
-    <section className="screen pin-screen active">
+    <section className="screen pin-screen active" aria-label="Enter UPI PIN">
       <header className="pin-topbar">
         <button className="pin-cancel" onClick={onBack} type="button">CANCEL</button>
-        <div className="pin-brand">
+        <div className="pin-brand" aria-label="EduPay UPI">
           <strong>EDUPAY</strong>
           <span>UPI</span>
         </div>
@@ -77,40 +83,53 @@ export function PinScreen({ txn, onBack, onComplete }) {
       </header>
 
       <div className="pin-payment-summary">
-        <div>
+        <div className="pin-payee-block">
           <small>Pay ₹{amount.toFixed(2)}</small>
           <strong>To {payeeName}</strong>
-          <span>{txn?.upiId || 'merchant@edu'}</span>
+          <span>{upiId}</span>
+          {(note || merchantCode) && (
+            <em>{note || `Merchant ${merchantCode}`}</em>
+          )}
         </div>
-        <div className="pin-summary-amount">₹{amount.toFixed(2)}</div>
+        <div className="pin-summary-right">
+          <div className="pin-summary-amount">₹{amount.toFixed(2)}</div>
+          {source === 'upi' && <span className="pin-upi-badge">UPI</span>}
+        </div>
       </div>
 
       <div className="pin-content">
         <div className="pin-heading">ENTER 4-DIGIT UPI PIN</div>
+
         <div className="pin-dots reference-dots" aria-label={`${pin.length} of 4 digits entered`}>
           {[0, 1, 2, 3].map((i) => (
-            <span key={i} className={i < pin.length ? 'filled' : ''} />
+            <span
+              key={i}
+              className={i < pin.length ? 'filled' : ''}
+              aria-hidden="true"
+            />
           ))}
         </div>
 
         <div className="pin-security-note">
           <span>!</span>
-          <div>You are sending <strong>₹{amount.toFixed(2)}</strong> from your account to <strong>{payeeName}</strong></div>
+          <div>
+            You are sending <strong>₹{amount.toFixed(2)}</strong> from your account to <strong>{payeeName}</strong>
+          </div>
         </div>
 
         <div className="pin-helper">Never share your UPI PIN with anyone</div>
         {error && <div className="pin-error" role="alert">{error}</div>}
 
-        <div className="pin-pad reference-pin-pad">
+        <div className="pin-pad reference-pin-pad" aria-label="UPI PIN keypad">
           {['1','2','3','4','5','6','7','8','9','⌫','0','PAY'].map((key) => (
             <button
               key={key}
               type="button"
               className={key === 'PAY' ? 'pin-pay-key' : key === '⌫' ? 'pin-delete-key' : ''}
               onClick={() => pressKey(key)}
-              aria-label={key === '⌫' ? 'Delete' : key === 'PAY' ? 'Pay' : key}
+              aria-label={key === '⌫' ? 'Delete' : key === 'PAY' ? 'Pay' : `Digit ${key}`}
             >
-              {key === '⌫' ? '⌫' : key}
+              {key}
             </button>
           ))}
         </div>

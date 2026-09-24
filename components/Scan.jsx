@@ -31,29 +31,80 @@ function parseQR(text) {
   const raw = String(text || '').trim();
   if (!raw) return null;
 
+  const normalise = (value = '') => String(value).trim();
+  const numberOrZero = (value) => {
+    const n = Number(value);
+    return Number.isFinite(n) && n > 0 ? n : 0;
+  };
+
+  // EduPay demo QR payload. This preserves the payee information we generated
+  // so the same name/UPI ID/amount can flow all the way to the PIN screen.
   try {
     const json = JSON.parse(raw);
-    if (json?.app === 'edupay-demo' || json?.upiId || json?.amount) {
+    if (json && (json.app === 'edupay-demo' || json.upiId || json.pa || json.name)) {
+      const upiId = normalise(json.upiId || json.pa || '');
+      const name = normalise(json.name || json.payeeName || json.pn || 'EduPay Merchant');
       return {
-        name: json.name || 'EduPay Merchant',
-        upiId: json.upiId || 'merchant@edu',
-        amount: Number(json.amount || 0),
+        name,
+        payeeName: name,
+        upiId,
+        amount: numberOrZero(json.amount ?? json.am),
+        note: normalise(json.note || json.tn || ''),
+        merchantCode: normalise(json.merchantCode || json.mc || ''),
+        transactionRef: normalise(json.transactionRef || json.tr || json.tid || ''),
+        currency: normalise(json.currency || json.cu || 'INR'),
+        source: 'edupay-demo',
+        raw,
       };
     }
   } catch {}
 
+  // Standard UPI payment QR: the payee name is normally carried in `pn`.
+  // `pa`, `am`, `tn`, `mc`, `tr`, `tid` and `cu` are retained for the payment UI.
   try {
     if (/^upi:\/\/pay/i.test(raw)) {
       const url = new URL(raw);
+      const params = url.searchParams;
+      const upiId = normalise(params.get('pa') || '');
+      const name = normalise(params.get('pn') || 'UPI Merchant');
       return {
-        name: url.searchParams.get('pn') || 'UPI Merchant',
-        upiId: url.searchParams.get('pa') || '',
-        amount: Number(url.searchParams.get('am') || 0),
+        name,
+        payeeName: name,
+        upiId,
+        amount: numberOrZero(params.get('am')),
+        note: normalise(params.get('tn') || ''),
+        merchantCode: normalise(params.get('mc') || ''),
+        transactionRef: normalise(params.get('tr') || params.get('tid') || ''),
+        currency: normalise(params.get('cu') || 'INR'),
+        source: 'upi',
+        raw,
       };
     }
   } catch {}
 
-  return { name: 'Scanned QR', upiId: raw.slice(0, 80), amount: 0 };
+  // A few QR generators wrap a UPI URL in an intent:// URL.
+  try {
+    if (/^intent:\/\//i.test(raw) && /upi:\/\/pay/i.test(raw)) {
+      const embedded = raw.slice(raw.indexOf('upi://'));
+      const end = embedded.indexOf('#Intent;');
+      return parseQR(end >= 0 ? embedded.slice(0, end) : embedded);
+    }
+  } catch {}
+
+  // We cannot infer a real person's name from only an opaque QR value.
+  // Keep the scanned value visible as the UPI/QR identifier instead of inventing a name.
+  return {
+    name: 'Scanned QR',
+    payeeName: 'Scanned QR',
+    upiId: raw.slice(0, 80),
+    amount: 0,
+    note: '',
+    merchantCode: '',
+    transactionRef: '',
+    currency: 'INR',
+    source: 'unknown',
+    raw,
+  };
 }
 
 export default function Scan({ onBack, onScanned, onDemo }) {
